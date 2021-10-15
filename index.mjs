@@ -20,6 +20,7 @@ const cloudflareHeader = {
 //Discord webhook notifications for things
 async function sendDiscordWebHook(message) {
     if (!message) return;
+    if (config.discord.auth.webhook === "") return;
     await fetch(`${config.discord.auth.webhook}`,
         {
             method: 'post',
