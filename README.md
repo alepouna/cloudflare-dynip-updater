@@ -3,6 +3,7 @@
 [![GitHub license](https://img.shields.io/github/license/eramsorgr/cloudflare-dynip-updater)](https://github.com/eramsorgr/cloudflare-dynip-updater/blob/master/LICENSE)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/eramsorgr/cloudflare-dynip-updater.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/eramsorgr/cloudflare-dynip-updater/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/eramsorgr/cloudflare-dynip-updater.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/eramsorgr/cloudflare-dynip-updater/context:javascript)
+
 A tool to use if you have a server with a dynamic IP. The tool will automatically detect your system IP address and update a predefined record on CloudFlare.
 
 # Requirements
