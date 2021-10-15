@@ -1,0 +1,34 @@
+{
+
+    "interval": 600,
+    "_comment_interval": "Interval to run worker in SECONDS",
+
+    "cloudflare": {
+        "auth": {
+            "email": "your cloudflare email",
+            "key": "your cloudflare api key"
+        },
+        "zone": {
+            "identifier": "your zone ID"
+        },
+        "dns": {
+            "identifier": "your dns record ID",
+            "type": "dns record type",
+            "name": "dns record name WITH domain",
+            "ttl": "dns ttl - set to '1' for automatic",
+            "proxied": true,
+            "_comment_proxied": "True - Traffic through CloudFlare (orange cloud) / False DNS only (gray cloud)"
+        }
+    },
+    "discord": {
+        "auth": {
+            "webhook": "your discord webhook url - emtpy to disable"
+        },
+        "notifications": {
+            "_comment_notifcations": "Enable/Disable notifications as needed",
+            "dns_record_update_failure": true,
+            "dns_record_update_success": true,
+            "ip_same": true
+        }
+    }
+}
