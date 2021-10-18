@@ -58,8 +58,7 @@ async function saveToCf() {
         if (record.type === "") return;
         if (record.name === "") return;
         if (record.ttl === "") return;
-        if (record.proxied === "") return;
-        if (record.value === "") return;    
+        if (record.proxied === "") return;   
         
         //Type check
         if (record.type !== "A" && record.type !== "AAAA" && record.type !== "CNAME") {
@@ -70,20 +69,13 @@ async function saveToCf() {
 
         const url = `https://api.cloudflare.com/client/v4/zones/${record.zone_identifier}/dns_records/${record.dns_identifier}`;
 
-        let contentToStore = "";
-        if (record.value.toLowerCase() === "ip") {
-            contentToStore = ip;
-        } else {
-            contentToStore = record.value;
-        };
-
         const cfRequest = await fetch(url, {
             method: 'PUT',
             headers: cloudflareHeader,
             body: JSON.stringify({
                 type: record.type,
                 name: record.name,
-                content: contentToStore,
+                content: ip,
                 ttl: record.ttl,
                 proxied: record.proxied
             })

@@ -39,9 +39,7 @@
             "_command_type": "Currently only supports A/AAAA/CNAME",
             "name": "",
             "ttl": "",
-            "proxied": true,
-            "value": "IP",
-            "_command_value": "Leave as 'IP' to use the IP of the machine otherwise put a static value you wish to set. Support for custom values soon."
+            "proxied": true
         }
     ]
 }
