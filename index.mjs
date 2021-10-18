@@ -35,32 +35,6 @@ async function sendDiscordWebHook(message) {
     return true;
 };
 
-//Find your zones
-async function grabZonesIdentifiers() {
-    const url = `https://api.cloudflare.com/client/v4/zones`
-    const request = await fetch(url, {
-        method: 'GET',
-        headers: cloudflareHeader
-    });
-
-    const response = await request.json();
-
-    console.log(response);
-};
-
-//Find your DNS identifiers
-async function grabDNSIdentifier() {
-    const url = `https://api.cloudflare.com/client/v4/zones/${config.cloudflare.zone.identifier}/dns_records/`
-    const request = await fetch(url, {
-        method: 'GET',
-        headers: cloudflareHeader
-    });
-
-    const response = await request.json();
-
-    console.log(response);
-};
-
 //Grab IP from ipify function
 async function grabIP() {
 
@@ -73,27 +47,60 @@ async function grabIP() {
 //Update records to CloudFlare
 async function saveToCf() {
 
-    //Cloudflare put IP
-    const url = `https://api.cloudflare.com/client/v4/zones/${config.cloudflare.zone.identifier}/dns_records/${config.cloudflare.dns.identifier}`
-    const cfRequest = await fetch(url, {
-        method: 'PUT',
-        headers: cloudflareHeader,
-        body: JSON.stringify({
-            type: config.cloudflare.dns.type,
-            name: config.cloudflare.dns.name,
-            content: ip,
-            ttl: config.cloudflare.dns.ttl,
-            proxied: config.cloudflare.dns.proxied
-        })
-    });
+    let successes = 0;
 
-    const response = await cfRequest.json();
+    for (let i = 0; i < config.records.length; i++) {
+        let record = config.records[i];
 
-    if (!response.success) {
-        console.log(response);
-        if (config.discord.notifications.dns_record_update_failure) sendDiscordWebHook(`[ERROR] Failed to update DNS record.`);
-        return false;
-    } else return true;
+        //Sanity checks
+        if (record.zone_identifier === "") return;
+        if (record.dns_identifier === "") return;
+        if (record.type === "") return;
+        if (record.name === "") return;
+        if (record.ttl === "") return;
+        if (record.proxied === "") return;
+        if (record.value === "") return;    
+        
+        //Type check
+        if (record.type !== "A" && record.type !== "AAAA" && record.type !== "CNAME") {
+            console.log(`[WORKER]: Type ${record.type} is not supported. Skipping.`);
+            if (config.discord.notifications.other_errors) sendDiscordWebHook(`[ERROR] Type ${record.type} is not supported for record **${record.name}**. Skipping.`);
+            continue;
+        };
+
+        const url = `https://api.cloudflare.com/client/v4/zones/${record.zone_identifier}/dns_records/${record.dns_identifier}`;
+
+        let contentToStore = "";
+        if (record.value.toLowerCase() === "ip") {
+            contentToStore = ip;
+        } else {
+            contentToStore = record.value;
+        };
+
+        const cfRequest = await fetch(url, {
+            method: 'PUT',
+            headers: cloudflareHeader,
+            body: JSON.stringify({
+                type: record.type,
+                name: record.name,
+                content: contentToStore,
+                ttl: record.ttl,
+                proxied: record.proxied
+            })
+        });
+
+        const response = await cfRequest.json();
+
+        if (!response.success) {
+            console.log(response);
+            if (config.discord.notifications.dns_record_update_failure) sendDiscordWebHook(`[ERROR] Failed to update DNS record **${record.name}**`);
+        } else successes++;
+
+        if (config.records.length === successes) {
+            if (config.discord.notifications.dns_record_update_success) sendDiscordWebHook(`[SUCCESS]: **${successes}/${config.records.length}** records updated.`);
+        };
+
+    };
 
 };
 
@@ -105,16 +112,7 @@ async function worker() {
     if (currentIP !== ip) {
         ip = currentIP;
         console.log(`[WORKER]: IP has changed. Updating CloudFlare DNS record(s).`);
-        const cfRes = await saveToCf();
-        if (cfRes) {
-            console.log(`[WORKER]: CloudFlare DNS record(s) updated.`);
-            if (config.discord.notifications.dns_record_update_success) sendDiscordWebHook(`[SUCCESS] CloudFlare DNS record(s) updated.`);
-            console.log(`[WORKER]: Halting for ${config.interval}s.`)
-        } else {
-            console.log(`[WORKER]: Failed to update CloudFlare DNS record(s).`);
-            if (config.discord.notifications.dns_record_update_failure) sendDiscordWebHook(`[ERROR] Failed to update CloudFlare DNS record(s).`);
-            console.log(`[WORKER]: Halting for ${config.interval}s.`)
-        };
+        await saveToCf();
     } else {
         console.log(`[WORKER]: IP has not changed. Continuing.`);
         if (config.discord.notifications.ip_same) sendDiscordWebHook(`[SUCCESS] IP has not changed. Continuing.`);
@@ -136,9 +134,51 @@ console.log("                  CloudFlare Dynamic IP Updater")
 console.log("                eramsorgr - github.com/eramsorgr")
 console.log()
 
-//Uncomment any of the two functions if you need to find your zone identifiers or your DNS identifiers
-//await grabZonesIdentifiers();
-//await grabDNSIdentifier();
-console.log(`[WORKER]: Starting worker.`);
-await worker();
-setInterval(worker, config.interval * 1000);
+//PARSE INFO - ZONE IDS
+if (config.parseinfo.show_zone_ids === true) {
+    const url = `https://api.cloudflare.com/client/v4/zones`
+    const request = await fetch(url, {
+        method: 'GET',
+        headers: cloudflareHeader
+    });
+
+    const response = await request.json();
+
+    console.log(`--------------------- PARSEINFO START ---------------------`)
+    console.log(`[PARSEINFO]: Printing Zones`)
+    console.log()
+    for (let i = 0; i < response.result.length; i++) {
+        console.log(`Zone name: ${response.result[i].name} has ID ${response.result[i].id}`)
+    };
+    console.log(`--------------------- PARSEINFO END ---------------------`)
+
+};
+
+//PARSE INFO - DNS RECORDS
+if (config.parseinfo.show_dns_records_for_zone === true) {
+    const url = `https://api.cloudflare.com/client/v4/zones/${config.parseinfo.zone_for_dns_records}/dns_records/`
+    const request = await fetch(url, {
+        method: 'GET',
+        headers: cloudflareHeader
+    });
+
+    const response = await request.json();
+
+    console.log(`--------------------- PARSEINFO START ---------------------`)
+    console.log(`[PARSEINFO]: Printing A/AAAA/CNAME DNS records of zone ${config.parseinfo.zone_for_dns_records}`)
+    console.log()
+    for (let i = 0; i < response.result.length; i++) {
+        if (response.result[i].type !== "A" && response.result[i].type !== "AAAA" && response.result[i].type !== "CNAME") continue; //Skip records that are not A, AAAA or CNAME
+        console.log(`DNS record name: ${response.result[i].name} type '${response.result[i].type}' has ID ${response.result[i].id}`)
+    };
+    console.log(`--------------------- PARSEINFO END ---------------------`)
+
+};
+
+//Worker
+if (config.parseinfo.show_zone_ids === false && config.parseinfo.show_dns_records_for_zone === false) {
+    console.log(`[WORKER]: Starting worker for ${config.records.length} records.`);
+    await worker();
+    sendDiscordWebHook(`[INFO] Worker has started.`);
+    setInterval(worker, config.interval * 1000);
+};
