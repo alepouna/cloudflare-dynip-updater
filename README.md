@@ -1,47 +1,55 @@
-# cloudflare-dynip-updater v1.1
-[![GitHub issues](https://img.shields.io/github/issues/eramsorgr/cloudflare-dynip-updater)](https://github.com/eramsorgr/cloudflare-dynip-updater/issues)
-[![GitHub license](https://img.shields.io/github/license/eramsorgr/cloudflare-dynip-updater)](https://github.com/eramsorgr/cloudflare-dynip-updater/blob/master/LICENSE)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/eramsorgr/cloudflare-dynip-updater.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/eramsorgr/cloudflare-dynip-updater/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/eramsorgr/cloudflare-dynip-updater.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/eramsorgr/cloudflare-dynip-updater/context:javascript)
+# cloudflare-dynip-updater v2
 
-A tool to use if you have a server with a dynamic IP. The tool will automatically detect your system IP address and update a predefined record on CloudFlare.
+[![GitHub issues](https://img.shields.io/github/issues/auroraisluna/cloudflare-dynip-updater)](https://github.com/auroraisluna/cloudflare-dynip-updater/issues)
+[![GitHub license](https://img.shields.io/github/license/auroraisluna/cloudflare-dynip-updater)](https://github.com/auroraisluna/cloudflare-dynip-updater/blob/master/LICENSE)
 
-# Requirements
-- NodeJS v16.8.0 or higher 
-- A site running on CloudFlare and a CloudFlare User API Key
-- [Optionally] A Discord server for webhook alerts
+A tool that automatically updates your CloudFlare DNS records of your choice with your current IP address. 
 
-# Setup
+# Docker Setup
 
-### Text tutorial
+## Before you start, make sure you have: 
+- A site(s) running on CloudFlare and a CloudFlare User API Key with Zone Edit permissions [Create on here](https://dash.cloudflare.com/profile/api-tokens)
+- [Optionally] A Discord channel for webhook notifications
 
-Run npm install. 
-Clone the confing.example.json and rename to 'config.json' and edit it as you like. 
+## Running the tool
 
-You can find your zones by changing `parseinfo.show_zone_ids` to **true**, which will print all your zones. Change to **false** after they have been printed.
-
-You can find your DNS records for a zone by adding the zone you want to lookup at `parseinfo.zone_for_dns_records` to a zone ID and then change `parseinfo.show_dns_records_for_zone` to **true**. Make sure to change to **false** after you've got your data.
-
-You can now add zones as you like by copying the template under `records` and pasting it inside the array. Make sure to add commas before each new record.  
-
-```json
-{
-    "zone_identifier": "ZONE ID", //Zone ID as parsed
-    "dns_identifier": "DNS ID", //DNS ID as parsed
-    "type": "A/AAAA/CNAME", //Choose either A or AAAA or CNAME
-    "name": "", //Record name, INCLUDING the domain (aka as parsed)
-    "ttl": "", //TTL time, set to 1 for AUTO
-    "proxied": true //Cloudflare orange cloud on/off
-}
+### With Docker Compose
+Create a `docker-compose.yml` file with the following content: 
+(Update the environment variables with your own values)
+```yaml
 ```
 
-After you have setup a configuration, run the script using pm2 or another daemonizer so the script runs 24/7. 
+Run `docker-compose up -d` (or `docker compose up -d` if on newer Docker versions) to start the container (add `-d` to run in detached mode)
 
-### Video Tutorial
-Coming Soon
+### With Docker CLI
+Run the following command to start the container (add `-d` to run in detached mode)
+```bash
+```
+
+### Login to the admin panel
+
+By default the container exposes port "11812" for the admin panel of this tool. 
+You can login with the following credentials:
+Username: `change@changeme.changeme`
+Password: `changeme`
+
+!!! You will need to change your password for security purposes. 
+
+If you have forgotten your password, you can reset it by deleting the `users.db` file in the `data` folder. Please note that this will also delete all your other users so you will need to create them again.
+
+
+# Manual Setup
+
+Clone the repo
+
+Run `npm install` to install all dependencies
+
 
 # Issues and Contributors
 
-Feel free to submit issues, ideas and others as well as contribute to the project! 
- 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/eramsorgr)
+If you have any issues while using the tool, please first check the [issues](https://github.com/auroraisluna/cloudflare-dynip-updater) for similar issues. If you can't find any, please create a new issue with as much information as possible.
+
+If you would like to contribute to the project, please create a pull request with your changes or submit a 'Suggestion' issue with your idea. Contributions are always welcome!
+
+You can also support myself and the project by buying me a coffee: 
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/auroraisluna)
