@@ -1,0 +1,10 @@
+<%- include('./top.ejs'); %>
+<% if (page.nav) { %>
+    <%- include('./navbar.ejs'); %>
+<% }%>
+
+<%- include(`../${page.path}`); %>
+
+<%- include('./footer.ejs'); %>
+
+<%- include('./bottom.ejs'); %>

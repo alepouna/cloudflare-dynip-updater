@@ -12,10 +12,29 @@
     "url": "git+https://github.com/auroraisluna/cloudflare-dynip-updater"
   },
   "keywords": [
-    "cloudflare", "ip", "dynamic", "dns", "update", "updater", "dynamic ip", "dynamic dns", "dynamic dns updater", "cloudflare dynamic dns", "cloudflare dynamic dns updater", "cloudflare dynamic ip", "cloudflare dynamic ip updater"
+    "cloudflare",
+    "ip",
+    "dynamic",
+    "dns",
+    "update",
+    "updater",
+    "dynamic ip",
+    "dynamic dns",
+    "dynamic dns updater",
+    "cloudflare dynamic dns",
+    "cloudflare dynamic dns updater",
+    "cloudflare dynamic ip",
+    "cloudflare dynamic ip updater"
   ],
   "license": "MIT",
   "dependencies": {
+    "@fastify/static": "^6.11.2",
+    "@fastify/view": "^8.2.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "fastify": "^4.24.3",
+    "fastify-ejs-page-builder": "^1.0.2",
+    "fastifyrouter.js": "^1.0.3",
     "node-fetch": "^3.0.0"
   }
 }

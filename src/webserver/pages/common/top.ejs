@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title><%= page.title %> - Cloudflare DynIP Worker</title>
+    <!-- CSS files -->
+    <link href="/assets/css/tabler.min.css?1668287865" rel="stylesheet"/>
+    <link href="/assets/css/tabler-flags.min.css?1668287865" rel="stylesheet"/>
+    <link href="/assets/css/tabler-payments.min.css?1668287865" rel="stylesheet"/>
+    <link href="/assets/css/tabler-vendors.min.css?1668287865" rel="stylesheet"/>
+    <link href="/assets/css/demo.min.css?1668287865" rel="stylesheet"/>
+    <link rel="icon" href="/assets/img/fav.ico" type="image/x-icon"/>
+    <style>
+      @import url('/assets/css/rsms.me_inter_inter.css');
+      :root {
+      	--tblr-font-sans-serif: Inter, -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/css/swal2.dark.css">
+  </head>
+  <body <% if (page.theme === 'dark') { %>class="theme-dark"<% } %>>
+    <script src="/assets/js/demo-theme.js?1668287865"></script>
+    <div class="page">
