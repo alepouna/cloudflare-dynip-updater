@@ -1,4 +1,8 @@
+# ⚠️⚠️ As of 29/02/2024 this repository has been moved to GitLab at https://gitlab.com/alepouna.dev/cloudflare-dynip-updater
+
+
 # cloudflare-dynip-updater v1.1
+
 [![GitHub issues](https://img.shields.io/github/issues/eramsorgr/cloudflare-dynip-updater)](https://github.com/eramsorgr/cloudflare-dynip-updater/issues)
 [![GitHub license](https://img.shields.io/github/license/eramsorgr/cloudflare-dynip-updater)](https://github.com/eramsorgr/cloudflare-dynip-updater/blob/master/LICENSE)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/eramsorgr/cloudflare-dynip-updater.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/eramsorgr/cloudflare-dynip-updater/alerts/)
